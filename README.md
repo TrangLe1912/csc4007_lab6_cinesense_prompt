@@ -35,7 +35,7 @@ lab7_cinesense_prompt_scaffold/
 
 ## Dữ liệu mẫu
 
-File `data/imdb_sample_50.csv` gồm 50 review ngắn theo phong cách IMDB, được tạo để minh họa cho lab. Đây không phải dữ liệu gốc của IMDB. Khi triển khai chính thức, giảng viên hoặc sinh viên có thể thay thế bằng một mẫu lấy từ IMDB dataset đang dùng trong các bài trước.
+File `data/imdb_sample_50.csv` gồm 50 review ngắn theo phong cách IMDB, được tạo để minh họa cho lab. Đây không phải dữ liệu gốc của IMDB. Sinh viên có thể thay thế bằng một mẫu lấy từ IMDB dataset đang dùng trong các bài trước.
 
 Các cột chính:
 
