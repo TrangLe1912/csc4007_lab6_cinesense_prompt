@@ -1,2 +1,3 @@
-review_id,review_text,gold_sentiment,expected_aspects,difficulty,note
-S001,Paste or write one IMDB review here.,positive/negative,"acting,story,pacing,...",easy/mixed/ambiguous,Explain why this item is useful for testing.
+review_id,review_text,gold_sentiment,expected_aspects,difficulty,test_purpose
+S001,Paste or write one IMDB review here.,positive/negative,"acting,story,pacing,...",easy/mixed/ambiguous/keyword_trap/long_review,Explain why this item is useful for testing.
+S002,"The movie looks beautiful, but I felt bored and disappointed by the end.",negative,"visuals,pacing,ending",keyword_trap,Tests whether the model follows the overall attitude instead of surface praise words.
