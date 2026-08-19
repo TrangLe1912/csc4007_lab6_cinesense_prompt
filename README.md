@@ -4,6 +4,8 @@ Lab này dùng một giao thức benchmark có kiểm soát để phân tích tr
 
 > **Giới hạn quan trọng:** benchmark mặc định dùng token tổng hợp để đo khả năng mở rộng về thời gian và bộ nhớ. Nó **không đo chất lượng ngôn ngữ**. Metric chất lượng từ các lab trước phải được ghi riêng trong `data/task_metrics_template.csv`.
 
+> **Phiên bản hiện hành:** `README.md`, `ASSIGNMENT.md`, `RUBRIC.md`, `run_lab6.py`, `src/`, `tests/`, `reports/` và `data/task_metrics_template.csv` là nội dung Lab 6 hiện tại. Các thư mục `prompts/`, `eval/`, `outputs_sample/`, `scripts/`, `submissions/` cùng những file dữ liệu prompt cũ chỉ được giữ lại để đối chiếu lịch sử; sinh viên không dùng chúng cho bài nộp Lab 6 này.
+
 ## Kết quả học tập
 
 Sau lab, sinh viên có thể:
