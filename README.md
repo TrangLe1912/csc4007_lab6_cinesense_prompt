@@ -1,257 +1,104 @@
-# Lab 6 – CineSense Prompt Evaluation Scaffold
+# CSC4007 Lab 6 — Mamba/Long-sequence Benchmark
 
-## 1. Mục đích
+Lab này dùng một giao thức benchmark có kiểm soát để phân tích trade-off của RNN, LSTM, GRU, Transformer và Mamba/SSM khi độ dài chuỗi tăng.
 
-Bộ này là **lab scaffold tối thiểu**, không phải starter kit hoàn chỉnh.
+> **Giới hạn quan trọng:** benchmark mặc định dùng token tổng hợp để đo khả năng mở rộng về thời gian và bộ nhớ. Nó **không đo chất lượng ngôn ngữ**. Metric chất lượng từ các lab trước phải được ghi riêng trong `data/task_metrics_template.csv`.
 
-Sinh viên cần tự thiết kế prompt, chạy thử nghiệm, phân tích lỗi và cải tiến prompt trên ngữ cảnh IMDB Movie Review Dataset đã được dùng xuyên suốt từ Lab 1 đến Lab 5.
+## Kết quả học tập
 
-Lab 6 nối tiếp Lab 5 về Transformer/self-attention/fine-tuning bằng cách đặt câu hỏi thực tế:
+Sau lab, sinh viên có thể:
 
-> Khi dùng LLM cho tác vụ phân tích review phim, làm sao biết prompt có đáng tin cậy hay không?
+- chạy cùng một giao thức trên nhiều mô hình và độ dài chuỗi;
+- lưu cấu hình, latency, throughput, bộ nhớ và số tham số;
+- phân biệt bằng chứng về chi phí tính toán với bằng chứng về chất lượng tác vụ;
+- lập luận lựa chọn mô hình theo metric, tài nguyên, độ dài chuỗi và bối cảnh.
 
-Thông điệp chính của lab:
+Ánh xạ: **LLO07 → CLO3, CLO4**; kết quả là một phần minh chứng của **A2.2**.
 
-> Prompt Engineering không chỉ là viết một câu lệnh hay. Đó là một vòng lặp gồm: thiết kế prompt → chạy thử → đo lường → phân tích lỗi → cải tiến prompt.
+## Cài đặt nhanh
 
-## 2. Kết quả học tập mong đợi
+Yêu cầu Python 3.10+.
 
-Sau lab này, sinh viên có thể:
+```bash
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
 
-1. Thiết kế prompt cho tác vụ phân tích sentiment của review phim.
-2. So sánh prompt baseline, prompt cải tiến và prompt có tư duy Chain-of-Thought.
-3. Yêu cầu LLM trả output có cấu trúc JSON.
-4. Đánh giá output bằng metric cụ thể thay vì nhận xét cảm tính.
-5. Phân tích lỗi theo error bucket.
-6. Nhận xét khi nào LLM đáng tin và khi nào không đáng tin.
+Chạy smoke test không cần Mamba:
 
-## 3. Cấu trúc thư mục
+```bash
+python run_lab6.py --smoke --models rnn,lstm,gru,transformer
+pytest -q
+```
+
+Chạy benchmark chính:
+
+```bash
+python run_lab6.py \
+  --sequence-lengths 128,256,512,1024 \
+  --models rnn,lstm,gru,transformer,mamba \
+  --batch-size 8 \
+  --hidden-size 64 \
+  --warmup 3 \
+  --repeats 10 \
+  --device auto
+```
+
+Kết quả được ghi vào `outputs/`:
+
+- `benchmark.csv`: dữ liệu thô theo mô hình và độ dài chuỗi;
+- `run_config.json`: cấu hình và thông tin môi trường;
+- `tradeoff_summary.md`: bảng tóm tắt để bắt đầu phân tích.
+
+## Cài Mamba thật (tùy môi trường)
+
+Mamba là dependency tùy chọn vì gói chính thức thường cần Linux, CUDA tương thích và compiler phù hợp.
+
+```bash
+pip install -r requirements-mamba.txt
+python run_lab6.py --models mamba --include-mamba yes --device cuda
+```
+
+Luôn đối chiếu hướng dẫn mới nhất trong [repository chính thức state-spaces/mamba](https://github.com/state-spaces/mamba). Nếu chưa cài được, script ghi `status=not_installed`; không được đổi nhãn này thành kết quả đã chạy. Có thể thảo luận kết quả tham khảo nếu ghi rõ nguồn, phần cứng và tách khỏi kết quả tự chạy.
+
+## Giao thức so sánh công bằng
+
+Giữ nguyên giữa các mô hình:
+
+- batch size, hidden size, số lớp, vocabulary và device;
+- warmup, số lần lặp và seed;
+- độ dài chuỗi và kiểu dữ liệu;
+- phiên bản phần mềm và điều kiện phần cứng.
+
+Số tham số giữa các kiến trúc không hoàn toàn bằng nhau; vì vậy `parameters` luôn được xuất để người học nêu giới hạn này. CPU memory dùng mức tăng RSS lấy mẫu (hoặc high-water RSS khi sandbox không cho truy cập process), còn CUDA dùng peak allocated memory của PyTorch; trường `memory_method` cho biết cách đo.
+
+## Nhiệm vụ
+
+Xem [ASSIGNMENT.md](ASSIGNMENT.md) và [RUBRIC.md](RUBRIC.md). Tối thiểu cần:
+
+1. chạy benchmark trên ít nhất bốn độ dài chuỗi;
+2. so sánh RNN/LSTM/GRU/Transformer và thử Mamba khi môi trường cho phép;
+3. bổ sung metric chất lượng tác vụ từ lab trước;
+4. hoàn thiện `reports/analysis_report.md` với kết luận có giới hạn.
+
+## Cấu trúc repo
 
 ```text
-lab6_cinesense_prompt_scaffold/
-├── data/
-│   ├── imdb_sample_50.csv
-│   └── student_testset_template.csv
-├── prompts/
-│   ├── prompt_template_v1.txt
-│   ├── prompt_template_v2.txt
-│   ├── prompt_template_v3_cot.txt
-│   └── system_prompt_optional.txt
-├── eval/
-│   ├── eval_template.csv
-│   └── error_bucket_guide.md
-├── outputs_sample/
-│   ├── result_v1_sample.csv
-│   ├── result_v2_sample.csv
-│   └── result_v3_cot_sample.csv
-├── scripts/
-│   └── run_prompt_eval_skeleton.py
-├── submissions/
-│   └── error_analysis_template.md
+.
+├── run_lab6.py
+├── src/
+│   ├── models.py
+│   └── benchmark.py
+├── data/task_metrics_template.csv
+├── reports/analysis_report.md
+├── tests/
 ├── ASSIGNMENT.md
 └── RUBRIC.md
 ```
 
-## 4. Dữ liệu mẫu
+## Tài liệu chính
 
-File `data/imdb_sample_50.csv` gồm 50 review ngắn theo phong cách IMDB, được tạo để minh họa cho lab. Đây không phải dữ liệu gốc của IMDB.
-
-Sinh viên có thể:
-
-- dùng file mẫu có sẵn để chạy thử;
-- hoặc thay thế bằng một mẫu lấy từ IMDB dataset đã dùng trong các bài trước.
-
-Các cột chính:
-
-| Cột | Ý nghĩa |
-|---|---|
-| review_id | Mã review |
-| review_text | Nội dung review |
-| gold_sentiment | Nhãn chuẩn: positive hoặc negative |
-| expected_aspects | Một số khía cạnh đáng chú ý |
-| difficulty | Mức độ dễ/khó của mẫu |
-| source_note | Ghi chú nguồn |
-
-Sinh viên tạo testset riêng bằng file:
-
-```text
-data/student_testset_template.csv
-```
-
-Testset nên có 20–50 review, bao gồm các loại: `easy`, `mixed`, `ambiguous`, `keyword_trap`, `long_review`.
-
-## 5. Nhiệm vụ chính
-
-### Bước 1: Chọn tác vụ
-
-Tối thiểu chọn tác vụ:
-
-> Phân loại sentiment của review phim: positive/negative.
-
-Nhóm khá có thể mở rộng thêm:
-
-- trích xuất aspect;
-- giải thích bằng chứng;
-- đánh giá confidence;
-- phát hiện hallucination;
-- phân tích lỗi do keyword trap hoặc mixed review.
-
-### Bước 2: Viết Prompt v1 – Baseline Prompt
-
-Mở file:
-
-```text
-prompts/prompt_template_v1.txt
-```
-
-Prompt v1 là prompt ngắn, trực tiếp, dùng để tạo baseline.
-
-### Bước 3: Viết Prompt v2 – Improved Prompt
-
-Mở file:
-
-```text
-prompts/prompt_template_v2.txt
-```
-
-Prompt v2 cần cải tiến có chủ đích so với v1, ví dụ:
-
-- yêu cầu chỉ dùng thông tin trong review;
-- không bịa thêm thông tin về phim, diễn viên, đạo diễn, giải thưởng;
-- trích evidence đúng nguyên văn từ review;
-- xử lý review có cả khen và chê;
-- thêm confidence.
-
-### Bước 4: Viết Prompt v3 – CoT-inspired Prompt
-
-Mở file:
-
-```text
-prompts/prompt_template_v3_cot.txt
-```
-
-Prompt v3 dùng tư duy Chain-of-Thought ở mức kiểm soát được.
-
-Lưu ý quan trọng:
-
-- Không yêu cầu LLM in ra toàn bộ chuỗi suy luận dài.
-- Nên yêu cầu LLM phân tích nội bộ theo các bước.
-- Output cuối cùng vẫn phải là JSON hợp lệ, ngắn gọn, dễ đánh giá.
-
-Ví dụ tư duy mong muốn:
-
-```text
-Identify positive clues → identify negative clues → decide which attitude dominates → check exact evidence → return JSON only.
-```
-
-### Bước 5: Chạy thử nghiệm
-
-Chạy cả 3 prompt trên cùng một testset 20–50 review.
-
-Có ba cách thực hiện:
-
-1. Dùng ChatGPT/Gemini/Claude qua web UI.
-2. Dùng API như Gemini API, Groq API, OpenRouter, Ollama local API.
-3. Dùng file output mẫu nếu lỗi mạng hoặc chưa cấu hình được API.
-
-Không bắt buộc dùng API nếu mục tiêu chính của buổi học là đánh giá prompt.
-
-### Bước 6: Đánh giá output
-
-Dùng:
-
-```text
-eval/eval_template.csv
-eval/error_bucket_guide.md
-```
-
-Mỗi dòng cần xác định:
-
-- sentiment đúng hay sai;
-- JSON có hợp lệ không;
-- evidence có lấy đúng từ review không;
-- có hallucination không;
-- có dùng outside knowledge không;
-- confidence có hợp lý không;
-- lỗi thuộc bucket nào.
-
-### Bước 7: Viết báo cáo phân tích lỗi
-
-Dùng:
-
-```text
-submissions/error_analysis_template.md
-```
-
-Báo cáo phải chỉ ra prompt nào tốt hơn, tốt hơn ở loại lỗi nào, và CoT có thật sự giúp ích không.
-
-## 6. Yêu cầu nộp
-
-```text
-lab6_submission/
-├── prompt_v1.txt
-├── prompt_v2.txt
-├── prompt_v3_cot.txt
-├── testset.csv
-├── result_v1.csv
-├── result_v2.csv
-├── result_v3_cot.csv
-├── eval_v1.csv
-├── eval_v2.csv
-├── eval_v3_cot.csv
-└── error_analysis.md
-```
-
-## 7. Metric tối thiểu cần báo cáo
-
-| Metric | Ý nghĩa |
-|---|---|
-| Accuracy | Tỷ lệ dự đoán đúng sentiment |
-| Valid JSON rate | Tỷ lệ output là JSON hợp lệ |
-| Evidence exactness rate | Tỷ lệ evidence được trích đúng nguyên văn từ review |
-| Hallucination count | Số output bịa thêm thông tin không có trong review |
-| Outside knowledge count | Số output dùng kiến thức ngoài review |
-| Overconfidence count | Số output quá tự tin với review nhập nhằng |
-
-Bảng so sánh nên có dạng:
-
-| Metric | Prompt v1 | Prompt v2 | Prompt v3 CoT | Comment |
-|---|---:|---:|---:|---|
-| Accuracy | | | | |
-| Valid JSON rate | | | | |
-| Evidence exactness rate | | | | |
-| Hallucination count | | | | |
-| Outside knowledge count | | | | |
-| Overconfidence count | | | | |
-
-## 8. Tiêu chí đánh giá tóm tắt
-
-| Tiêu chí | Điểm |
-|---|---:|
-| Testset 20–50 mẫu, có đủ easy/mixed/ambiguous/keyword-trap | 1.5 |
-| Prompt v1, v2, v3 CoT có khác biệt rõ ràng | 2.0 |
-| Chạy đủ 3 prompt và lưu output đúng định dạng | 1.5 |
-| Đánh giá bằng metric rõ ràng | 2.0 |
-| Phân tích lỗi bằng error bucket, có ví dụ cụ thể | 2.0 |
-| Reflection tốt về CoT và độ tin cậy của prompt | 1.0 |
-| **Tổng** | **10.0** |
-
-Xem chi tiết trong:
-
-```text
-RUBRIC.md
-```
-
-## 9. Lưu ý quan trọng
-
-Không đánh giá prompt bằng cảm giác. Cần có bằng chứng qua testset, bảng lỗi và ví dụ cụ thể.
-
-Không kết luận “CoT tốt hơn” chỉ vì prompt dài hơn. Cần so sánh bằng metric và phân tích lỗi.
-
-Một prompt tốt không chỉ dự đoán đúng nhãn, mà còn cần:
-
-- trả output đúng format;
-- trích evidence đúng;
-- không hallucinate;
-- không quá tự tin với review nhập nhằng;
-- giải thích ngắn gọn và có căn cứ.
+- Gu & Dao, [Mamba: Linear-Time Sequence Modeling with Selective State Spaces](https://arxiv.org/abs/2312.00752)
+- [Official Mamba implementation](https://github.com/state-spaces/mamba)

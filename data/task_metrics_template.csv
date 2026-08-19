@@ -1,0 +1,7 @@
+model,dataset,split,metric,value,seed,source_file,notes
+rnn,,,,,,,
+lstm,,,,,,,
+gru,,,,,,,
+transformer,,,,,,,
+mamba,,,,,,,
+

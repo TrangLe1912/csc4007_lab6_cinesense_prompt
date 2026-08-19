@@ -1,0 +1,4 @@
+# Cài requirements.txt trước. Kiểm tra yêu cầu CUDA/compiler tại repository chính thức.
+mamba-ssm
+causal-conv1d
+

@@ -1,49 +1,17 @@
-# Lab 6 Rubric – CineSense Prompt Evaluation
+# Rubric Lab 6 — 10 điểm
 
-Total: 10 points
-
-| Criteria | Points | Description |
+| Hạng mục | Điểm | Đạt đầy đủ khi |
 |---|---:|---|
-| Testset quality | 1.5 | 20–50 reviews; includes easy, mixed, ambiguous, keyword-trap, and long-review cases; labels are clear and reasonable |
-| Prompt design | 2.0 | Prompt v1, v2, and v3 CoT are meaningfully different; v2 and v3 improve on identified weaknesses of v1 |
-| Experiment execution | 1.5 | All three prompts are run on the same testset; output files are complete and organized |
-| Quantitative evaluation | 2.0 | Includes accuracy, valid JSON rate, evidence exactness rate, hallucination count, outside knowledge count, and overconfidence count |
-| Error analysis | 2.0 | Uses error buckets correctly; includes concrete review examples; explains why each error matters |
-| Reflection and conclusion | 1.0 | Clearly discusses whether Prompt v2 and Prompt v3 CoT improved reliability; conclusion is evidence-based |
+| Tái lập môi trường | 1.0 | Có config, phiên bản, device, seed và smoke test chạy được |
+| Thiết kế benchmark | 2.0 | Cùng điều kiện, tối thiểu 4 độ dài chuỗi, warmup/repeats hợp lý |
+| Thực thi và bằng chứng | 2.0 | Có kết quả RNN/LSTM/GRU/Transformer; trạng thái Mamba trung thực; giữ log lỗi/OOM |
+| Metric chất lượng | 2.0 | Dùng dữ liệu NLP thật, ghi dataset/split/metric/source; không trộn với synthetic benchmark |
+| Phân tích trade-off | 2.0 | So sánh metric, latency, memory, parameters, độ dài chuỗi và bối cảnh; nêu giới hạn |
+| Tài liệu hóa | 1.0 | Báo cáo rõ, file đúng cấu trúc, lệnh chạy tái lập được |
 
-## Performance levels
+## Lỗi nghiêm trọng
 
-### Excellent
+- Ghi kết quả Mamba đã chạy khi dependency/model chưa chạy thật: không tính điểm phần thực thi Mamba và trừ minh chứng.
+- So sánh bằng các điều kiện khác nhau mà không khai báo: tối đa 50% điểm thiết kế benchmark.
+- Dùng latency synthetic để kết luận chất lượng NLP: không tính điểm lập luận tương ứng.
 
-- Testset includes diverse and challenging cases.
-- Prompt improvements are intentional and clearly explained.
-- Evaluation is complete and consistent.
-- Error examples are specific and insightful.
-- Reflection avoids unsupported claims.
-
-### Good
-
-- Required files are complete.
-- Metrics are mostly correct.
-- Prompt versions are different but not deeply analyzed.
-- Error analysis includes examples but may not fully connect them to prompt design.
-
-### Needs improvement
-
-- Testset is too small or lacks difficult cases.
-- Prompt versions are almost identical.
-- Output files are incomplete.
-- Evaluation is based mostly on personal judgement.
-- Error analysis is vague or missing concrete evidence.
-
-## Notes for grading CoT
-
-Do not award points simply because a prompt uses CoT-style wording.
-
-Award points when students show evidence that Prompt v3 CoT:
-
-- improves accuracy;
-- improves evidence quality;
-- reduces hallucination;
-- handles mixed or keyword-trap reviews better;
-- or, if it does not improve results, the student explains why using evidence.
