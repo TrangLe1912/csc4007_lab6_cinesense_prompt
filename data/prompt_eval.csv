@@ -1,0 +1,11 @@
+﻿review_id,review_text,gold_sentiment,difficulty,split,source_type,source_reference
+E01,"I expected a dull drama, yet the final act is moving and memorable.",positive,contrast,eval,synthetic_teaching_example,CSC4007_teaching_examples_v1
+E02,The camera work is stylish but the story never becomes convincing.,negative,mixed_signal,eval,synthetic_teaching_example,CSC4007_teaching_examples_v1
+E03,Far from terrible: the dialogues are sharp and the performances are warm.,positive,negation,eval,synthetic_teaching_example,CSC4007_teaching_examples_v1
+E04,The movie starts well and then collapses into a tedious final hour.,negative,contrast,eval,synthetic_teaching_example,CSC4007_teaching_examples_v1
+E05,"A playful, inventive film that made me smile throughout.",positive,clear,eval,synthetic_teaching_example,CSC4007_teaching_examples_v1
+E06,Not a good sequel. The jokes feel forced and the characters are flat.,negative,negation,eval,synthetic_teaching_example,CSC4007_teaching_examples_v1
+E07,"Even with a predictable plot, the lead performance is excellent.",positive,mixed_signal,eval,synthetic_teaching_example,CSC4007_teaching_examples_v1
+E08,The visuals are lovely; unfortunately the writing is painfully weak.,negative,mixed_signal,eval,synthetic_teaching_example,CSC4007_teaching_examples_v1
+E09,An uneven beginning gives way to a gripping conclusion.,positive,contrast,eval,synthetic_teaching_example,CSC4007_teaching_examples_v1
+E10,"I wanted to love it, but every scene feels too long.",negative,contrast,eval,synthetic_teaching_example,CSC4007_teaching_examples_v1

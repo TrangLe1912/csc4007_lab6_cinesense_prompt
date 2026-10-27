@@ -1,0 +1,7 @@
+{
+  "version": "synthetic_cinesense_kb_v1",
+  "source_type": "synthetic_teaching_example",
+  "documents": 10,
+  "chunks": 20,
+  "generator": "curated teaching examples, not IMDB originals"
+}

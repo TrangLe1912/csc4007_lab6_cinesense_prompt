@@ -1,0 +1,6 @@
+﻿review_id,review_text,gold_sentiment,difficulty,split,source_type,source_reference
+S01,"It is not entirely without charm, though I would not recommend it.",negative,double_negation,stress,synthetic_teaching_example,CSC4007_teaching_examples_v1
+S02,"I thought it could not get better, yet it did.",positive,negation,stress,synthetic_teaching_example,CSC4007_teaching_examples_v1
+S03,Great music. Weak story. Somehow it works as a joyful experience.,positive,mixed_signal,stress,synthetic_teaching_example,CSC4007_teaching_examples_v1
+S04,"Technically impressive, emotionally empty.",negative,mixed_signal,stress,synthetic_teaching_example,CSC4007_teaching_examples_v1
+S05,I should have left early; the acting never improves.,negative,clear,stress,synthetic_teaching_example,CSC4007_teaching_examples_v1

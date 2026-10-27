@@ -1,0 +1,6 @@
+﻿review_id,review_text,gold_sentiment,difficulty,split,source_type,source_reference
+D01,The acting is charming and the story kept me interested until the final scene.,positive,clear,dev,synthetic_teaching_example,CSC4007_teaching_examples_v1
+D02,"The trailer was exciting, but the movie itself is not worth watching.",negative,contrast,dev,synthetic_teaching_example,CSC4007_teaching_examples_v1
+D03,Not bad at all; the pacing is surprisingly engaging.,positive,negation,dev,synthetic_teaching_example,CSC4007_teaching_examples_v1
+D04,Beautiful costumes cannot rescue the confusing plot and weak ending.,negative,mixed_signal,dev,synthetic_teaching_example,CSC4007_teaching_examples_v1
+D05,"The cast is great, although the soundtrack is occasionally loud. Overall a delightful film.",positive,mixed_signal,dev,synthetic_teaching_example,CSC4007_teaching_examples_v1

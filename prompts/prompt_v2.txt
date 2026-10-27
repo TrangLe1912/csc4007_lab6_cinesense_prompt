@@ -1,0 +1,4 @@
+# TODO – Người học phải sửa prompt dựa trên phân tích lỗi DEV.
+# Gợi ý: xử lý negation, mixed signals, yêu cầu evidence thật sự hỗ trợ nhãn.
+# Giữ nguyên schema và nhiệm vụ so với v1 để so sánh công bằng.
+Review: {review_text}
